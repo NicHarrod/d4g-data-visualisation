@@ -7,6 +7,55 @@
   pointer-events: none;
 }
 
+.map-container {
+  position: relative;
+  height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+
+.data-count {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5); /* Faded black background */
+  color: white; /* White text for contrast */
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1001;
+}
+
+.map-filters {
+  position: absolute;
+  top: 60px; /* Start below the data count, adjust as needed */
+  right: 10px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.filter-item {
+  margin-right: 10px; /* Right margin for spacing between filters */
+  margin-bottom: 5px; /* Bottom margin if wrapped to the next line */
+}
+
+.filter-button {
+  padding: 5px 10px; /* Button padding for better clickability */
+  margin-left: 10px; /* Left margin only for the button */
+  font-weight: normal; /* Regular font-weight for the button */
+}
+
+
+
+/* Additional styling for inputs and buttons can be added here */
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
