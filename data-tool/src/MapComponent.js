@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+
 
 function MapComponent({ markers, polylines}) {
     
@@ -22,26 +22,22 @@ function MapComponent({ markers, polylines}) {
         mapContainer.style.height = `${window.innerHeight}px`;
         map.invalidateSize(); // Update the map size
     }
-    
 
-    // Define marker icon
-    const myIcon = L.icon({
-      iconUrl: "marker-icon.png",
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34]
-    });
 
     // Add markers/polylines when the map is ready
     // Else there is an error 
     map.whenReady(() => {
       markers.forEach(marker => {
-        L.marker(marker.position, { icon: myIcon }).addTo(map);
+        L.circleMarker(marker.position, {
+          radius: 5,
+          fillColor: "#ff7800",
+          color: "#000",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        }).addTo(map);
       });
-    
-      polylines.forEach(polyline => {
-        L.polyline(polyline.coordinates, {color: polyline.color}).addTo(map);
-      });
+
     });
     
     // Cleanup function, removing unwanted markers and polylines from screen
