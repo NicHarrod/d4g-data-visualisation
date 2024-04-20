@@ -1,25 +1,74 @@
-import logo from './logo.svg';
 import './App.css';
-import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
+import MapComponent from './MapComponent';
+import { useState } from 'react';
+import * as XLSX from "xlsx";
 
 function App() {
+
+  const [data, setData] = useState([]);
+
+  const handleFileUpload = (e) => {
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(e.target.files[0]);
+    reader.onload = (e) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(sheet);
+      setData(parsedData);
+    };
+  };
+  
+  
+  const markers = [
+    { position: [52.5128, 13.3892], popupContent: "Marker 1" },
+  ];
+
+  const polylines = [
+    { 
+      coordinates: [
+        [52.5092, 13.3801],
+        [52.5117, 13.4020],
+      ], 
+      color: "blue",
+    }
+  ];
+
+
   return (
     <div>
-      <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false} style={{ height:"100vh", width:"100vw", backgroundColor:"white"}}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      <input 
+        type="file" 
+        accept=".xlsx, .xls" 
+        onChange={handleFileUpload} 
       />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-    </MapContainer>
+      <div>
+
+        {data.length > 0 && (
+        <table className="table">
+          <thead>
+            <tr>
+              {Object.keys(data[0]).map((key) => (
+                <th key={key}>{key}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr key={index}>
+                {Object.values(row).map((value, index) => (
+                  <td key={index}>{value}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       </div>
+      <MapComponent markers={markers} polylines={polylines} />
+    </div>
   );
 }
-
 export default App;
