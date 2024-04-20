@@ -41,7 +41,7 @@ function App() {
     <div>
       <input 
         type="file" 
-        accept=".xlsx, .xls" 
+        accept=".xlsx, .xls, .csv" 
         onChange={handleFileUpload} 
       />
       <div>
