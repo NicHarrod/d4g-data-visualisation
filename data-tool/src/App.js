@@ -12,19 +12,24 @@ function App() {
   const [filtering,setFiltering] = useState(false)
 
 
-  const handleFileUpload = (e) => {
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(e.target.files[0]);
-    reader.onload = (e) => {
-      const data = e.target.result;
-      const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const parsedData = XLSX.utils.sheet_to_json(sheet);
-      setData(parsedData);
-      setAllData(parsedData)
-    };
-  };
+  useEffect(() => {
+    fetch('/accidents_Berlin_2021.csv')
+        .then((response) => response.blob())
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.readAsArrayBuffer(blob);
+          reader.onload = (e) => {
+            const data = e.target.result;
+            const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const parsedData = XLSX.utils.sheet_to_json(sheet);
+            setData(parsedData);
+            setAllData(parsedData);
+          };
+        })
+        .catch((error) => console.error('Error loading the CSV file:', error));
+  }, []);
   
   let markerPositions = [];
 
@@ -121,11 +126,7 @@ function App() {
       {console.log(filter)}
       
       
-      <input 
-        type="file" 
-        accept=".xlsx, .xls, .csv" 
-        onChange={handleFileUpload} 
-      />
+
       <MapComponent markers={markers} polylines={polylines} />
       Bike <input type='checkbox' checked={filter.includes("InvolvingBike")} onChange={() => handleCheck("InvolvingBike")} />
       Car <input type='checkbox' checked={filter.includes("InvolvingCar")} onChange={() => handleCheck("InvolvingCar")} />
