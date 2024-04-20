@@ -53,7 +53,7 @@ function App() {
       setFilter([])
     }
     
-  },[filtering,filter]
+  },[filtering]
   )
 
   function filterData(fieldList){
@@ -61,13 +61,11 @@ function App() {
     data.forEach((row)=>{
         let accepted=true
         for (const field of fieldList){
-          console.log("checking ",field,' against',row[field])
           if (!row[field]){
             accepted=false
           }
         }
         if(accepted){
-          console.log(accepted)
           newData.push(row)
         }
 
@@ -102,7 +100,7 @@ function App() {
     
     <div>
       {console.log(filter)}
-      {console.log(data.length)}
+      
       
       <input 
         type="file" 
