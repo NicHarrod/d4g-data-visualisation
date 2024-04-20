@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import MapComponent from './MapComponent';
 import { useEffect, useState } from 'react';
 import * as XLSX from "xlsx";
+import bikeLanes from './bikeLanes';
 
 function App() {
 
@@ -82,15 +83,47 @@ function App() {
     setData(newData)
   }
 
-  const polylines = [
-    { 
-      coordinates: [
-        [52.5092, 13.3801],
-        [52.5117, 13.4020],
-      ], 
-      color: "blue",
+
+
+
+      //         return[{coordinates: [
+  //       [52.5092, 13.3801],
+  //       [52.5117, 13.4020],
+  //       [ 52.50504796580146,13.581988763382206],
+  //     ], 
+  //     color: "blue",
+  //   },
+  //   {coordinates: [
+  //     [52.5092, 13.5801],
+  //     [52.5117, 13.6020],
+  //     [ 52.50504796580146,13.781988763382206],
+  //   ], 
+  //   color: "blue",
+  // }]
+    //[[(13.581988763382206, 52.50504796580146), (13.582372967419351, 52.50503873285179)]]
+    const polylines = ()=>{
+    const plines = [];
+    const lanes = bikeLanes();
+    
+    for (const lines of lanes) {
+        for (const line of lines) {
+            const coordinates = [];
+            for (const coord of line) {
+                const latLng = [coord[1], coord[0]];
+                //console.log('Coordinate:', latLng); // Log each coordinate
+                coordinates.push(latLng);
+            }
+            plines.push({
+                coordinates: coordinates,
+                color: "blue" // You can customize the color here
+            });
+        }
     }
-  ];
+    console.log(plines)
+    return plines;
+    
+
+    };
 
   const handleCheck = (field) => {
     setFilter((prevFilter) => {
@@ -126,7 +159,7 @@ function App() {
         accept=".xlsx, .xls, .csv" 
         onChange={handleFileUpload} 
       />
-      <MapComponent markers={markers} polylines={polylines} />
+      <MapComponent markers={markers} polylines={polylines()} />
       Bike <input type='checkbox' checked={filter.includes("InvolvingBike")} onChange={() => handleCheck("InvolvingBike")} />
       Car <input type='checkbox' checked={filter.includes("InvolvingCar")} onChange={() => handleCheck("InvolvingCar")} />
       Pedestrian <input type='checkbox' checked={filter.includes("InvolvingPedestrian")} onChange={() => handleCheck("InvolvingPedestrian")} />
