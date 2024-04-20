@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 
 function MapComponent({ markers, polylines}) {
@@ -36,7 +37,13 @@ function MapComponent({ markers, polylines}) {
           opacity: 1,
           fillOpacity: 0.8
         }).addTo(map);
+      })
+
+      polylines.forEach(polyline => {
+        L.polyline(polyline.coordinates, {color: polyline.color}).addTo(map);
       });
+
+
 
     });
     
