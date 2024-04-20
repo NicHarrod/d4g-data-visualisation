@@ -50,22 +50,31 @@ function App() {
       filterData(filter)
     }else{
       setData(allData)
+    
+
+    }
+  },[filtering,filter]
+  )
+  useEffect(()=>{
+    if (!filtering){
       setFilter([])
     }
-    
-  },[filtering]
-  )
+  },[filtering])
+
+
 
   function filterData(fieldList){
     let newData =[]
-    data.forEach((row)=>{
+    allData.forEach((row)=>{
         let accepted=true
         for (const field of fieldList){
+
           if (!row[field]){
             accepted=false
           }
         }
         if(accepted){
+
           newData.push(row)
         }
 
@@ -86,13 +95,23 @@ function App() {
   const handleCheck = (field) => {
     setFilter((prevFilter) => {
       if (prevFilter.includes(field)) {
-        return prevFilter.filter((item) => item !== field);
+        // If the checkbox is being unchecked
+        const newFilter = prevFilter.filter((item) => item !== field);
+        // Check if any filters are left after removing the current one
+        const isAnyFilterLeft = newFilter.length > 0;
+        // Set filtering accordingly
+        setFiltering(isAnyFilterLeft);
+        return newFilter;
       } else {
-        return [...prevFilter, field];
+        // If the checkbox is being checked
+        const newFilter = [...prevFilter, field];
+        // Always set filtering to true when adding a new filter
+        setFiltering(true);
+        return newFilter;
       }
     });
-    setFiltering(true)
   };
+  
   
 
 
