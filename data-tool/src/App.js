@@ -1,7 +1,7 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css';
 import MapComponent from './MapComponent';
-import { useEffect, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import * as XLSX from "xlsx";
 
 function App() {
@@ -50,6 +50,13 @@ function App() {
     markers.push(marker);
   });
 
+  const polylines = [
+    {
+      coordinates: [],
+      color: "blue",
+    }
+  ];
+
   useEffect(()=>{
     if (filtering){
       filterData(filter)
@@ -87,15 +94,7 @@ function App() {
     setData(newData)
   }
 
-  const polylines = [
-    { 
-      coordinates: [
-        [52.5092, 13.3801],
-        [52.5117, 13.4020],
-      ], 
-      color: "blue",
-    }
-  ];
+
 
   const handleCheck = (field) => {
     setFilter((prevFilter) => {
@@ -116,26 +115,62 @@ function App() {
       }
     });
   };
-  
-  
+
+  // Reference for the data count element
+  const dataCountRef = useRef(null);
+
+  // Reference for the map filters element
+  const mapFiltersRef = useRef(null);
+
+  useEffect(() => {
+    if (dataCountRef.current && mapFiltersRef.current) {
+      const dataCountHeight = dataCountRef.current.offsetHeight;
+      mapFiltersRef.current.style.top = `${10 + dataCountHeight}px`; // Adjust the top position based on the height of data count
+    }
+  }, [data.length]); // This effect should run every time the data count might change
+
 
 
   return (
-    
+
     <div>
       {console.log(filter)}
       
       
-
+      <div className="map-container">
       <MapComponent markers={markers} polylines={polylines} />
-      Bike <input type='checkbox' checked={filter.includes("InvolvingBike")} onChange={() => handleCheck("InvolvingBike")} />
-      Car <input type='checkbox' checked={filter.includes("InvolvingCar")} onChange={() => handleCheck("InvolvingCar")} />
-      Pedestrian <input type='checkbox' checked={filter.includes("InvolvingPedestrian")} onChange={() => handleCheck("InvolvingPedestrian")} />
-      Motorcycle <input type='checkbox' checked={filter.includes("InvolvingMotorcycle")} onChange={() => handleCheck("InvolvingMotorcycle")} />
-      HGV <input type='checkbox' checked={filter.includes("InvolvingHGV")} onChange={() => handleCheck("InvolvingHGV")} />
-      Other <input type='checkbox' checked={filter.includes("InvolvingOther")} onChange={() => handleCheck("InvolvingOther")} />
+        <div ref={dataCountRef} className="data-count">
+          Number of Accidents: {data.length}
+        </div>
 
-      <button onClick={()=>setFiltering(false)}>Clear Filter</button>
+        <div ref={mapFiltersRef} className="map-filters">
+          <label className="filter-item">
+          Bike <input type='checkbox' checked={filter.includes("InvolvingBike")} onChange={() => handleCheck("InvolvingBike")} />
+          </label>
+          <label className="filter-item">
+          Car <input type='checkbox' checked={filter.includes("InvolvingCar")} onChange={() => handleCheck("InvolvingCar")} />
+          </label>
+            <label className="filter-item">
+          Pedestrian <input type='checkbox' checked={filter.includes("InvolvingPedestrian")} onChange={() => handleCheck("InvolvingPedestrian")} />
+            </label>
+              <label className="filter-item">
+          Motorcycle <input type='checkbox' checked={filter.includes("InvolvingMotorcycle")} onChange={() => handleCheck("InvolvingMotorcycle")} />
+              </label>
+                <label className="filter-item">
+          HGV <input type='checkbox' checked={filter.includes("InvolvingHGV")} onChange={() => handleCheck("InvolvingHGV")} />
+                </label>
+                  <label className="filter-item">
+          Other <input type='checkbox' checked={filter.includes("InvolvingOther")} onChange={() => handleCheck("InvolvingOther")} />
+                  </label>
+                    <label className="filter-item">
+          <button className="filter-button" onClick={()=>setFiltering(false)}>Clear Filter</button>
+                    </label>
+
+        </div>
+
+      </div>
+
+
     </div>
   );
 }
