@@ -21,10 +21,24 @@ function App() {
     };
   };
   
-  
-  const markers = [
-    { position: [52.5128, 13.3892], popupContent: "Marker 1" },
-  ];
+  let markerPositions = [];
+
+  // Iterate over the data array
+  data.forEach((row) => {
+    // Push an array containing latitude and longitude into the coordinates array
+    markerPositions.push([row["LatitudeWGS84"], row["LongitudeWGS84"]]);
+  });
+
+  let markers = [];
+  markerPositions.forEach((position, index) => {
+    // Create a new marker object with position and popupContent
+    const marker = {
+      position: position,
+      popupContent: `Marker ${index + 1}` // Assuming index starts from 0
+    };
+    // Add the new marker to the markers array
+    markers.push(marker);
+  });
 
   const polylines = [
     { 
@@ -44,29 +58,6 @@ function App() {
         accept=".xlsx, .xls, .csv" 
         onChange={handleFileUpload} 
       />
-      <div>
-
-        {data.length > 0 && (
-        <table className="table">
-          <thead>
-            <tr>
-              {Object.keys(data[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, index) => (
-              <tr key={index}>
-                {Object.values(row).map((value, index) => (
-                  <td key={index}>{value}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      </div>
       <MapComponent markers={markers} polylines={polylines} />
     </div>
   );
