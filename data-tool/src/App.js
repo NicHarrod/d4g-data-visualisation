@@ -7,6 +7,7 @@ import bikeLanes from './bikeLanes';
 import blueRectangle from './blueRectangle.png';
 import circleMarkerImg from './circleMarker.png'
 
+
 function App() {
 
   const [data, setData] = useState([]);
@@ -14,25 +15,20 @@ function App() {
   const [filter,setFilter] = useState([])
   const [filtering,setFiltering] = useState(false)
 
-
-  useEffect(() => {
-    fetch('/accidents_Berlin_2021.csv')
-        .then((response) => response.blob())
-        .then((blob) => {
-          const reader = new FileReader();
-          reader.readAsArrayBuffer(blob);
-          reader.onload = (e) => {
-            const data = e.target.result;
-            const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-            const parsedData = XLSX.utils.sheet_to_json(sheet);
-            setData(parsedData);
-            setAllData(parsedData);
-          };
-        })
-        .catch((error) => console.error('Error loading the CSV file:', error));
-  }, []);
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(sheet);
+      setData(parsedData);
+      setAllData(parsedData);
+    };
+    reader.readAsArrayBuffer(file);
+  };
   
   let markerPositions = [];
 
@@ -52,8 +48,6 @@ function App() {
     // Add the new marker to the markers array
     markers.push(marker);
   });
-
-
 
   useEffect(()=>{
     if (filtering){
@@ -92,21 +86,6 @@ function App() {
     setData(newData)
   }
 
-      //         return[{coordinates: [
-  //       [52.5092, 13.3801],
-  //       [52.5117, 13.4020],
-  //       [ 52.50504796580146,13.581988763382206],
-  //     ], 
-  //     color: "blue",
-  //   },
-  //   {coordinates: [
-  //     [52.5092, 13.5801],
-  //     [52.5117, 13.6020],
-  //     [ 52.50504796580146,13.781988763382206],
-  //   ], 
-  //   color: "blue",
-  // }]
-    //[[(13.581988763382206, 52.50504796580146), (13.582372967419351, 52.50503873285179)]]
     const polylines = ()=>{
     const plines = [];
     const lanes = bikeLanes();
@@ -128,6 +107,7 @@ function App() {
     console.log(plines)
     return plines;
     
+
 
     };
 
@@ -157,6 +137,9 @@ function App() {
   // Reference for the map filters element
   const mapFiltersRef = useRef(null);
 
+    // Reference for the upload file element
+    const uploadRef = useRef(null);
+
   useEffect(() => {
     if (dataCountRef.current && mapFiltersRef.current) {
       const dataCountHeight = dataCountRef.current.offsetHeight;
@@ -174,6 +157,13 @@ function App() {
       <MapComponent markers={markers} polylines={polylines()} />
         <div ref={dataCountRef} className="data-count">
           Number of Accidents: {data.length}
+        </div>
+        <div ref={uploadRef} className="upload">
+            <input 
+            type="file" 
+            accept=".xlsx, .xls, .csv" 
+            onChange={handleFileUpload} 
+          />
         </div>
 
         <div ref={mapFiltersRef} className="map-filters">
@@ -201,10 +191,9 @@ function App() {
           <div className='keyBox'>
           <img src={blueRectangle} alt="Bike lane key" style={{ width: '20px', height: '20px' }}/> Bike Lanes <br/>
           <img src={circleMarkerImg} alt="Accident marker key" style={{ width: '20px', height: '20px' }}/> Accidents <br/>
-  
+
           </div>
         </div>
-
       </div>
     </div>
   );

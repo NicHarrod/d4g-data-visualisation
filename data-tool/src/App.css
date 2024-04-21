@@ -39,14 +39,27 @@
   flex-wrap: wrap;
   height: 80px;
 }
-.keyBox {
+
+.upload {
+  position: absolute;
+  top: 100px; /* Start below the data count, adjust as needed */
+  right: 10px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.keyBox{
   position: absolute;
   bottom: 0;
   left: 0;
   background-color: white;
   padding: 10px;
   border-radius: 5px;
-
   z-index: 1000;
 }
 
