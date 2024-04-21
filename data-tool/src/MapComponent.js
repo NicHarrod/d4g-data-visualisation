@@ -28,6 +28,11 @@ function MapComponent({ markers, polylines}) {
     // Add markers/polylines when the map is ready
     // Else there is an error 
     map.whenReady(() => {
+
+      polylines.forEach(polyline => {
+        L.polyline(polyline.coordinates, {color: polyline.color}).addTo(map);
+      });
+
       markers.forEach(marker => {
         L.circleMarker(marker.position, {
           radius: 5,
@@ -38,12 +43,6 @@ function MapComponent({ markers, polylines}) {
           fillOpacity: 0.8
         }).addTo(map);
       })
-
-      polylines.forEach(polyline => {
-        L.polyline(polyline.coordinates, {color: polyline.color}).addTo(map);
-      });
-
-
 
     });
     
