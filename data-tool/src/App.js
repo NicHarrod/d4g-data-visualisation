@@ -4,6 +4,8 @@ import MapComponent from './MapComponent';
 import {useEffect, useRef, useState} from 'react';
 import * as XLSX from "xlsx";
 import bikeLanes from './bikeLanes';
+import blueRectangle from './blueRectangle.png';
+import circleMarkerImg from './circleMarker.png'
 
 function App() {
 
@@ -51,12 +53,7 @@ function App() {
     markers.push(marker);
   });
 
-  const polylines = [
-    {
-      coordinates: [],
-      color: "blue",
-    }
-  ];
+
 
   useEffect(()=>{
     if (filtering){
@@ -174,7 +171,7 @@ function App() {
     <div>
       {console.log(filter)}
       <div className="map-container">
-      <MapComponent markers={markers} polylines={polylines} />
+      <MapComponent markers={markers} polylines={polylines()} />
         <div ref={dataCountRef} className="data-count">
           Number of Accidents: {data.length}
         </div>
@@ -201,7 +198,13 @@ function App() {
                     <label className="filter-item">
           <button className="filter-button" onClick={()=>setFiltering(false)}>Clear Filter</button>
                     </label>
+          <div className='keyBox'>
+          <img src={blueRectangle} alt="Bike lane key" style={{ width: '20px', height: '20px' }}/> Bike Lanes <br/>
+          <img src={circleMarkerImg} alt="Accident marker key" style={{ width: '20px', height: '20px' }}/> Accidents <br/>
+  
+          </div>
         </div>
+
       </div>
     </div>
   );
