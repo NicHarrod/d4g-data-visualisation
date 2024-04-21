@@ -1,4 +1,4 @@
-# d4g-data-visualisation
+# Hertie School's Data4Good Hackathon - Bristol Beees submission
 ### Description
 This is a data visualisation tool for visualising Berlin's bike lanes and traffic accidents data. The tool has been coded with React and Javascript so they will need to be installed on your own device before running our tool locally.
 
