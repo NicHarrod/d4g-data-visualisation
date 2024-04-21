@@ -42,7 +42,7 @@
 
 .upload {
   position: absolute;
-  top: 100px; /* Start below the data count, adjust as needed */
+  top: 140px; /* Start below the data count, adjust as needed */
   right: 10px;
   background-color: white;
   padding: 10px;
@@ -60,7 +60,7 @@
   background-color: white;
   padding: 10px;
   border-radius: 5px;
-  z-index: 1000;
+  z-index: 1001;
 }
 
 .filter-item {
